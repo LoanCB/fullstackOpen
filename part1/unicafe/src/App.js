@@ -16,6 +16,8 @@ const StatisticLine = ({text, value}) => (
 )
 
 const Statistics = ({good, neutral, bad}) => {
+  const total = good + neutral + bad
+
   if (good || neutral || bad)
     return (
       <table>
@@ -23,9 +25,9 @@ const Statistics = ({good, neutral, bad}) => {
           <StatisticLine text="good" value={good} />
           <StatisticLine text="neutral" value={neutral} />
           <StatisticLine text="bad" value={bad} />
-          <StatisticLine text="all" value={good + neutral + bad} />
-          <StatisticLine text="average" value={((good - bad) / (good + neutral + bad)).toFixed(1)} />
-          <StatisticLine text="positive" value={`${(good / (good + neutral + bad) * 100).toFixed(1)} %`} />
+          <StatisticLine text="all" value={total} />
+          <StatisticLine text="average" value={((good - bad) / total).toFixed(1)} />
+          <StatisticLine text="positive" value={`${(good / total * 100).toFixed(1)} %`} />
         </tbody>
       </table>
     )
