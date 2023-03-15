@@ -10,21 +10,28 @@ const App = () => {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.'
   ]
-  const [points, setPoints] = useState(Array(anecdotes.length).fill(0))
+  const [points, setPoints] = useState({0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0,})
   const [selected, setSelected] = useState(0)
+  const [top, setTop] = useState(anecdotes[0])
 
   const updatePoints = () => {
-    const copy = [...points]
+    const copy = {...points}
     copy[selected] += 1
     setPoints(copy)
+
+    // Update top vote
+    setTop(anecdotes[Object.entries(copy).sort((prev, next) => prev[1] - next[1]).pop()[0]])
   }
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <p>has {points[selected]} votes</p>
       <button onClick={updatePoints}>vote</button>
       <button onClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))}>next anecdote</button>
+      <h1>Anecdote with most votes</h1>
+      <p>{top}</p>
     </div>
   )
 }
