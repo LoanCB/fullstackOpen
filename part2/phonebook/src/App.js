@@ -36,7 +36,7 @@ const App = () => {
             setPersons(persons.map(person => person.id === editedPerson.id ? data : person))
             setNotification(`Edited ${data.name}`, false)
           })
-          .catch(error => setNotification(error, true))
+          .catch(error => setNotification(error.message, true))
       }
     } else {
       personService.create({name: newName, number: newNumber})
@@ -44,7 +44,7 @@ const App = () => {
           setPersons(persons.concat(data))
           setNotification(`Added ${data.name}`, false)
         })
-        .catch(error => setNotification(error, true))
+        .catch(error => setNotification(error.message, true))
       setNewName('')
       setNewNumber('')
     }
@@ -53,7 +53,7 @@ const App = () => {
     if (window.confirm(`Delete ${person.name} ?`)) {
       personService.remove(person.id)
         .then(() => setNotification(`Removed ${person.name}`, false))
-        .catch(error => setNotification(error, true))
+        .catch(error => setNotification(error.message, true))
       setPersons(persons.filter(deletedPerson => deletedPerson.id !== person.id))
     }
   }
