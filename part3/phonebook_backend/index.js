@@ -28,8 +28,13 @@ const persons = [
 
 
 // ROUTES
-app.get('/api/persons', (request, response) => {
-    response.json(persons)
+app.get('/api/persons', (request, response) => response.json(persons))
+app.get('/api/info', (request, response) => {
+    currentDate = new Date()
+    response.send(`
+        <p>Phonebook has info for ${persons.length} people</p>
+        <p>${currentDate}</p>
+    `)
 })
 
 
