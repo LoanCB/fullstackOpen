@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 const PORT = 3001
 
+app.use(express.json())
+
 // DATAS
 let persons = [
     { 
@@ -25,6 +27,13 @@ let persons = [
         "number": "39-23-6423122"
     }
 ]
+
+const generatedId = () => {
+    const maxId = persons.length > 0
+        ? Math.max(...persons.map(person => person.id))
+        : 0
+    return maxId + 1
+}
 
 
 // ROUTES
@@ -52,9 +61,23 @@ app.delete('/api/persons/:id', (request, response) => {
 
     response.status(204).end()
 })
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+    
+    if (!body.name || !body.number)
+        return response.status(400).json({error: 'name or number missing'})
+    
+    const person = {
+        id: generatedId(),
+        name: body.name,
+        number: body.number
+    }
+
+    persons = persons.concat(person)
+    response.json(person)
+})
 
 
-app.use(express.json())
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
