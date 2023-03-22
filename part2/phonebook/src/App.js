@@ -19,7 +19,7 @@ const App = () => {
 
   const handleNameChange = (event) => setNewName(event.target.value)
   const handleNumberChange = (event) => setNewNumber(event.target.value)
-  const filterPersons = () => persons.filter(person => person.name.toLowerCase().includes(filter))
+  const filterPersons = () => Object.values(persons).filter(person => person.name.toLowerCase().includes(filter))
   const setNotification = (message, error) => {
     setMessageState({message: message, error: error})
     setTimeout(() => setMessageState({message: null, error: false}), 5000)
