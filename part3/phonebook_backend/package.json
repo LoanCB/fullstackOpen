@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:ui": "shx rm -rf build && cd ../../part2/phonebook/ && npm run build && shx cp -r build ../../part3/phonebook_backend",
     "move": "shx cp -r . ../../../phonebook_share/",
-    "push": "cd ../../../phonebook_share && git add . && git commit -m 'deploy project' && git push",
+    "push": "cd ../../../phonebook_share && git add . && git commit -m deploy && git push",
     "deploy": "npm run build:ui && npm run move && npm run push"
   },
   "author": "LoanCB",

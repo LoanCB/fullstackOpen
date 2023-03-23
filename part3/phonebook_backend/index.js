@@ -65,10 +65,6 @@ app.delete('/api/persons/:id', (request, response, next) => {
 app.post('/api/persons', (request, response, next) => {
     const name = request.body.name
     const number = request.body.number
-    
-    if (!name || !number)
-        next({name: 'MissingArgument'})
-
     const person = new Person({
         name: name,
         number: number
@@ -87,12 +83,15 @@ const errorHandler = (error, request, response, next) => {
     if (error.name === 'CastError')
         return response.status(400).send({error: 'malformatted id'})
 
+    if (error.name === 'ValidationError')
+        return response.status(400).json({error: error.message})
+
     if (error.name === 'NotFound')
         return response.status(404).send({error: 'person not found'})
 
     if (error.name === 'MissingArgument')
         return response.status(400).json({error: 'missing argument'})
-    
+
     next(error)
 }
 
