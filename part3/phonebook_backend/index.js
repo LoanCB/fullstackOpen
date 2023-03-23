@@ -18,6 +18,14 @@ app.use(express.static('build'))
 
 
 // ROUTES
+app.get('/api/info', (request, response, next) => {
+    Person.estimatedDocumentCount()
+        .then(result => response.send(`
+            <p>Phonebook has info for ${result} people</p>
+            <p>${new Date()}</p>
+        `))
+        .catch(e => next(e))
+})
 app.get('/api/persons', (request, response, next) => {
     Person.find({})
         .then(result => response.json(result))
