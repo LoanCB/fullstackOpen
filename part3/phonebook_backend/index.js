@@ -29,13 +29,11 @@ app.get('/api/persons/:id', (request, response) => {
         .then(person => response.json(person))
         .catch(e => response.json({error: e}).status(404).end())
 })
-// app.delete('/api/persons/:id', (request, response) => {
-//     const id = Number(request.params.id)
-
-//     persons = persons.filter(person => person.id !== id)
-
-//     response.status(204).end()
-// })
+app.delete('/api/persons/:id', (request, response) => {
+    Person.findByIdAndRemove(request.params.id)
+        .then(() => response.status(204).end())
+        .catch(e => response.json({error: e}).status(404).end())
+})
 app.post('/api/persons', (request, response) => {
     const body = request.body
     
