@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 
 const Person = require('./models/person')
+const person = require('./models/person')
 
 const app = express()
 const PORT = process.env.PORT
@@ -33,20 +34,36 @@ app.get('/api/persons/:id', (request, response, next) => {
         })
         .catch(e => next(e))
 })
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
+
+    if (!body.name || !body.number)
+        next({name: 'MissingArgument'})
+
+    const person = {
+        name: body.name,
+        number: body.number
+    }
+
+    Person.findByIdAndUpdate(request.params.id, person, {new: true})
+        .then(updatedPerson => response.json(updatedPerson))
+        .catch(e => next(e))
+})
 app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
         .then(() => response.status(204).end())
         .catch(e => next(e))
 })
 app.post('/api/persons', (request, response, next) => {
-    const body = request.body
+    const name = request.body.name
+    const number = request.body.number
     
-    if (!body.name || !body.number)
+    if (!name || !number)
         next({name: 'MissingArgument'})
 
     const person = new Person({
-        name: body.name,
-        number: body.number
+        name: name,
+        number: number
     })
 
     person.save()
