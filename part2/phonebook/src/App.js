@@ -40,11 +40,11 @@ const App = () => {
       }
     } else {
       personService.create({name: newName, number: newNumber})
-        .then(data => {
-          setPersons(persons.concat(data))
-          setNotification(`Added ${data.name}`, false)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNotification(`Added ${response.data.name}`, false)
         })
-        .catch(error => setNotification(error.message, true))
+        .catch(error => setNotification(error.response.data.error, true))
       setNewName('')
       setNewNumber('')
     }

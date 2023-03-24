@@ -1,7 +1,7 @@
-POST https://fullstackopen-phonebook-yleh.onrender.com/api/persons
+POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-    "name": "l",
-    "number": "7"
+    "name": "l23",
+    "number": "75-365897"
 }
