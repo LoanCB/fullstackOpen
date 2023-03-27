@@ -10,21 +10,31 @@ const favoriteBlog = (blogs) => {
   return blogs.reduce((max, current) => max.likes > current.likes ? max : current)
 }
 
-const mostBlogs = (blogs) => {
+const mostBlogsOrLikes = (blogs, likes = false) => {
   let result = []
   
   for (let i = 0; i < blogs.length; i++){
     let objectFoundIndex = result.findIndex(blog => blog.author.includes(blogs[i].author))
     if (objectFoundIndex > 0) {
-        result[objectFoundIndex].blogs += 1
+        likes ? result[objectFoundIndex].likes += blogs[i].likes : result[objectFoundIndex].blogs += 1
     } else {
-        result.push({author: blogs[i].author, blogs: 1})
+        result.push(likes ? {author: blogs[i].author, likes: blogs[i].likes} : {author: blogs[i].author, blogs: 1})
     }
   }
 
+  return result
+}
+
+const mostBlogs = (blogs) => {
+  const result = mostBlogsOrLikes(blogs)
+  return result.reduce((max, current) => max.blogs > current.blogs ? max : current)
+}
+
+const mostLikes = (blogs) => {
+  const result = mostBlogsOrLikes(blogs, true)
   return favoriteBlog(result)
 }
 
 module.exports = {
-  dummy, totalLikes, favoriteBlog, mostBlogs
+  dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes
 }
