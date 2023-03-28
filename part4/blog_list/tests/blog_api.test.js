@@ -43,6 +43,11 @@ test('Number of blogs', async () => {
   expect(response.body).toHaveLength(initialBlogs.length)
 })
 
+test('id generated', async () => {
+  const response = await api.get('/api/blogs')
+  expect(response.body[0]._id).toBeDefined()
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
