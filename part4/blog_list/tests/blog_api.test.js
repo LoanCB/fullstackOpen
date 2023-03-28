@@ -48,6 +48,27 @@ test('id generated', async () => {
   expect(response.body[0]._id).toBeDefined()
 })
 
+test('create new blog', async () => {
+  const newBlog = {
+    title: `Foo 2`,
+    author: 'foo',
+    url: 'https://google.com',
+    likes: 4
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+  const contents = response.body.map(r => r.title)
+
+  expect(response.body).toHaveLength(initialBlogs.length + 1)
+  expect(contents).toContain('Foo 2')
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
