@@ -86,6 +86,34 @@ test('set likes to 0 if missing on creation', async () => {
   expect(response.body[response.body.length - 1].likes).toBe(0)
 })
 
+test('return 400 if title is missing', async () => {
+  const newBlog = {
+    author: 'foo',
+    url: 'https://google.com',
+    likes: 4
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+})
+
+test('return 400 if url is missing', async () => {
+  const newBlog = {
+    title: 'test url missing',
+    author: 'foo',
+    likes: 4
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
