@@ -69,6 +69,23 @@ test('create new blog', async () => {
   expect(contents).toContain('Foo 2')
 })
 
+test('set likes to 0 if missing on creation', async () => {
+  const newBlog = {
+    title: `Foo 3`,
+    author: 'foo',
+    url: 'https://google.com'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+  expect(response.body[response.body.length - 1].likes).toBe(0)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
