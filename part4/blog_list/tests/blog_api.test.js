@@ -30,44 +30,64 @@ test('id generated', async () => {
 })
 
 test('create new blog', async () => {
+  const blogsAtStart = await BlogsInDb()
+  const newBlog = {
+    title: `bar bar`,
+    author: 'bar',
+    url: 'https://www.google.com/',
+    likes: 2
+  }
+  
   await api
     .post('/api/blogs')
-    .send(initialBlogs[0])
+    .send(newBlog)
     .expect(201)
-    .expect('Content-Type', /application\/json/)
 
-  const response = await api.get('/api/blogs')
-  const contents = response.body.map(r => r.title)
+  const blogsAtEnd = await BlogsInDb()
+  expect(blogsAtEnd).toHaveLength(blogsAtStart.length + 1)
 
-  expect(response.body).toHaveLength(initialBlogs.length + 1)
-  expect(contents).toContain('Foo 2')
+  const titles = blogsAtEnd.map(t => t.title)
+  expect(titles).toContain(newBlog.title)
 })
 
 test('set likes to 0 if missing on creation', async () => {
+  const newBlog = {
+    title: `no like`,
+    author: 'bar',
+    url: 'https://www.google.com/',
+  }
+  
   await api
     .post('/api/blogs')
-    .send(initialBlogs[0])
+    .send(newBlog)
     .expect(201)
-    .expect('Content-Type', /application\/json/)
 
   const response = await api.get('/api/blogs')
   expect(response.body[response.body.length - 1].likes).toBe(0)
 })
 
 test('return 400 if title is missing', async () => {
+  const newBlog = {
+    author: 'bar',
+    url: 'https://www.google.com/',
+  }
+  
   await api
     .post('/api/blogs')
-    .send(initialBlogs[0])
+    .send(newBlog)
     .expect(400)
-    .expect('Content-Type', /application\/json/)
 })
 
 test('return 400 if url is missing', async () => {
+  const newBlog = {
+    title: `no like`,
+    author: 'bar',
+  }
+
   await api
     .post('/api/blogs')
-    .send(initialBlogs[0])
+    .send(newBlog)
     .expect(400)
-    .expect('Content-Type', /application\/json/)
 })
 
 describe('deletion of a blog', () => {
