@@ -9,6 +9,7 @@ const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
 const errorHandler = require('./utils/middleware')
 
+mongoose.set('strictQuery', false)
 mongoose.connect(MONGODB_URI)
 
 app.use(cors())
