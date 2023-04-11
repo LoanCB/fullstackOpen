@@ -96,7 +96,7 @@ describe('deletion of a blog', () => {
     const blogToDelete = blogsAtStart[0]
 
     await api
-      .delete(`/api/blogs/${blogToDelete.id}`)
+      .delete(`/api/blogs/${blogToDelete._id}`)
       .expect(204)
     
     const blogsAtEnd = await BlogsInDb()
@@ -104,6 +104,21 @@ describe('deletion of a blog', () => {
 
     const titles = blogsAtEnd.map(t => t.titles)
     expect(titles).not.toContain(blogToDelete.title)
+  })
+})
+
+describe('edition of a blog', () => {
+  test('change number of likes', async () => {
+    const blogsAtStart = await BlogsInDb()
+    const blogToEdit = blogsAtStart[0]
+
+    await api
+      .patch(`/api/blogs/${blogToEdit._id}`)
+      .send({likes: 1000})
+      .expect(200)
+    
+    const response = await api.get('/api/blogs')
+    expect(response.body[0].likes).toBe(1000)
   })
 })
 
