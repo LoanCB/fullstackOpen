@@ -2,28 +2,9 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const Blog = require('../models/blog')
 const app = require('../app')
-
+const { initialBlogs, BlogsInDb } = require('./test_helper')
 const api = supertest(app)
-const initialBlogs = [
-  {
-    title: `Django is the best framework <3`,
-    author: 'Loan CB',
-    url: 'https://www.djangoproject.com/',
-    likes: 17
-  },
-  {
-    title: `Foo`,
-    author: 'foo',
-    url: 'https://googe.com',
-    likes: 2
-  },
-  {
-    title: `HTML is easy`,
-    author: 'Loan CB',
-    url: 'https://googe.com',
-    likes: 8
-  }
-]
+
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -49,16 +30,9 @@ test('id generated', async () => {
 })
 
 test('create new blog', async () => {
-  const newBlog = {
-    title: `Foo 2`,
-    author: 'foo',
-    url: 'https://google.com',
-    likes: 4
-  }
-
   await api
     .post('/api/blogs')
-    .send(newBlog)
+    .send(initialBlogs[0])
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
@@ -70,15 +44,9 @@ test('create new blog', async () => {
 })
 
 test('set likes to 0 if missing on creation', async () => {
-  const newBlog = {
-    title: `Foo 3`,
-    author: 'foo',
-    url: 'https://google.com'
-  }
-
   await api
     .post('/api/blogs')
-    .send(newBlog)
+    .send(initialBlogs[0])
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
@@ -87,31 +55,36 @@ test('set likes to 0 if missing on creation', async () => {
 })
 
 test('return 400 if title is missing', async () => {
-  const newBlog = {
-    author: 'foo',
-    url: 'https://google.com',
-    likes: 4
-  }
-
   await api
     .post('/api/blogs')
-    .send(newBlog)
+    .send(initialBlogs[0])
     .expect(400)
     .expect('Content-Type', /application\/json/)
 })
 
 test('return 400 if url is missing', async () => {
-  const newBlog = {
-    title: 'test url missing',
-    author: 'foo',
-    likes: 4
-  }
-
   await api
     .post('/api/blogs')
-    .send(newBlog)
+    .send(initialBlogs[0])
     .expect(400)
     .expect('Content-Type', /application\/json/)
+})
+
+describe('deletion of a blog', () => {
+  test('succeeds with status code 204 if id is valid', async () => {
+    const blogsAtStart = await BlogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+    
+    const blogsAtEnd = await BlogsInDb()
+    expect(blogsAtEnd).toHaveLength(initialBlogs.length - 1)
+
+    const titles = blogsAtEnd.map(t => t.titles)
+    expect(titles).not.toContain(blogToDelete.title)
+  })
 })
 
 afterAll(async () => {
