@@ -1,8 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpZCI6IjY0MzY2MzAyZGJiODY5MDU3M2ZmM2UzMiIsImlhdCI6MTY4MTI4ODg4MH0.u38XfUzxsKq0Js_Zq3R7m5g0tAJ-lLIrDGKiC3SJiCE
 
 {
-  "title": "Test de blog",
+  "title": "Test de blooooog",
   "author": "Loan CB",
   "url": "https://google.com",
   "likes": 3
