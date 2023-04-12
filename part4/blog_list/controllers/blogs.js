@@ -1,39 +1,33 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const { getDecodedToken } = require('../utils/list_helper')
+const { userExtractor } = require('../utils/middleware')
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', {blogs: 0})
   response.json(blogs)
 })
 
-blogsRouter.post('/', async (request, response) => {
-  const decodedToken = getDecodedToken(request.token)
-  const user = await User.findById(decodedToken.id)
-
+blogsRouter.post('/', userExtractor, async (request, response) => {
   const blog = new Blog({
     url: request.body.url,
     title: request.body.title,
     author: request.body.author,
-    user: user,
+    user: request.user,
   })
 
   const savedBlog = await blog.save()
   user.blogs = user.blogs.concat(savedBlog.id)
-  await user.save()
+  await request.user.save()
 
   response.status(201).json(savedBlog)
 })
 
-blogsRouter.delete('/:id', async (request, response) => {
-  const decodedToken = getDecodedToken(request.token)
+blogsRouter.delete('/:id', userExtractor, async (request, response) => {
   const blog = await Blog.findById(request.params.id)
 
-  console.log(decodedToken)
-  console.log(blog.user)
+  console.log(request.user.id)
 
-  if (blog.user.toString() === decodedToken.id)
+  if (blog.user.toString() === request.user.id)
     await blog.remove()
   else response.status(403).json({error: "You don't have rights to remove this blog"})
 

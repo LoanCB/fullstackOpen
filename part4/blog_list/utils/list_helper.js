@@ -1,5 +1,3 @@
-const jwt = require('jsonwebtoken')
-
 const dummy = (blogs) => {
   return 1
 }
@@ -37,13 +35,6 @@ const mostLikes = (blogs) => {
   return favoriteBlog(result)
 }
 
-const getDecodedToken = token => {
-  const decodedToken = jwt.verify(token, process.env.SECRET)
-  if (!decodedToken.id)
-    return response.status(401).json({error: 'token invalid'})
-  return decodedToken
-}
-
 module.exports = {
-  dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes, getDecodedToken
+  dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes
 }
