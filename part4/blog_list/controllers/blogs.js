@@ -1,6 +1,7 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const { getDecodedToken } = require('../utils/list_helper')
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', {blogs: 0})
@@ -8,7 +9,8 @@ blogsRouter.get('/', async (request, response) => {
 })
 
 blogsRouter.post('/', async (request, response) => {
-  const user = await User.findById(request.decodedToken.id)
+  const decodedToken = getDecodedToken(request.token)
+  const user = await User.findById(decodedToken.id)
 
   const blog = new Blog({
     url: request.body.url,
@@ -25,7 +27,16 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
-  await Blog.findOneAndRemove(request.params.id)
+  const decodedToken = getDecodedToken(request.token)
+  const blog = await Blog.findById(request.params.id)
+
+  console.log(decodedToken)
+  console.log(blog.user)
+
+  if (blog.user.toString() === decodedToken.id)
+    await blog.remove()
+  else response.status(403).json({error: "You don't have rights to remove this blog"})
+
   response.status(204).end()
 })
 
