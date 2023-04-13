@@ -1,6 +1,6 @@
-import { forwardRef, useState } from "react";
+import { useState } from "react";
 
-const Togglable = forwardRef((props) => {
+const Togglable = (props) => {
   const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = {display: visible ? 'none' : ''}
@@ -9,7 +9,7 @@ const Togglable = forwardRef((props) => {
   const toggleVisible = () => setVisible(!visible)
 
   return (
-    <div>
+    <>
       <div style={hideWhenVisible}>
         <button onClick={toggleVisible}>{props.buttonLabel}</button>
       </div>
@@ -17,8 +17,8 @@ const Togglable = forwardRef((props) => {
         {props.children}
         <button onClick={toggleVisible}>cancel</button>
       </div>
-    </div>
+    </>
   )
-})
+}
 
 export default Togglable

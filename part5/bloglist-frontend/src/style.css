@@ -11,3 +11,10 @@
   border: 2px solid red;
   padding: 10px;
 }
+
+.blog {
+  margin-bottom: 5px;
+  padding-top: 10px;
+  padding-left: 2px;
+  border: solid 1px black;
+}
