@@ -1,12 +1,22 @@
 import { useState } from 'react'
+import blogService from '../services/blogs'
 
-const Blog = ({blog}) => {
+const Blog = ({blog, updateBlog}) => {
   const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = {display: visible ? 'none' : ''}
   const showWhenVisible = {display: visible ? '' : 'none'}
 
   const toggleVisible = () => setVisible(!visible)
+
+  const addLike = async () => {
+    try {
+      const editedBlog = await blogService.update(blog.id, {likes: blog.likes + 1})
+      updateBlog(editedBlog)
+    } catch (exception) {
+      console.log(exception)
+    }
+  }
 
   return (
     <div className='blog'>
@@ -19,7 +29,7 @@ const Blog = ({blog}) => {
         <button onClick={toggleVisible}>hide</button><br />
         {blog.url}<br />
         likes {blog.likes}
-        <button>like</button><br />
+        <button onClick={addLike}>like</button><br />
         {blog.author}
       </div>
     </div>

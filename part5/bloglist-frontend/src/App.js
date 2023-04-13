@@ -54,6 +54,10 @@ const App = () => {
     setUser(null)
   }
 
+  const updateBlog = (editedBlog) => {
+    setBlogs(blogs.map(blog => blog.id === editedBlog.id ? editedBlog : blog))
+  }
+
   if (user === null)
     return (
       <div>
@@ -96,7 +100,7 @@ const App = () => {
       </Togglable>
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
       )}
     </div>
   )
