@@ -54,8 +54,9 @@ const App = () => {
     setUser(null)
   }
 
-  const updateBlog = (editedBlog) => {
-    setBlogs(blogs.map(blog => blog.id === editedBlog.id ? editedBlog : blog))
+  const updateBlog = (editedBlog, remove = false) => {
+    if (remove) setBlogs(blogs.filter(blog => blog.id !== editedBlog.id))
+    else setBlogs(blogs.map(blog => blog.id === editedBlog.id ? editedBlog : blog))
   }
 
   if (user === null)
@@ -100,7 +101,7 @@ const App = () => {
       </Togglable>
 
       {blogs.sort((pre, next) => next.likes - pre.likes).map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} user={user} />
       )}
     </div>
   )

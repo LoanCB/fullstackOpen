@@ -35,7 +35,7 @@ blogsRouter.delete('/:id', userExtractor, async (request, response) => {
 })
 
 blogsRouter.patch('/:id', async (request, response) => {
-  const editedBlog = await Blog.findByIdAndUpdate(request.params.id, request.body, {new: true})
+  const editedBlog = await Blog.findByIdAndUpdate(request.params.id, request.body, {new: true}).populate('user', {blogs: 0})
   response.status(200).json(editedBlog)
 })
 
