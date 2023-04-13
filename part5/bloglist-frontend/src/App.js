@@ -8,7 +8,8 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -41,7 +42,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      setErrorMessage('Wrong username or password')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -57,21 +58,39 @@ const App = () => {
     event.preventDefault()
     try {
       const response = await blogService.create({title, author, url})
-    setBlogs(blogs.concat(response))
+      setBlogs(blogs.concat(response))
+      setSuccessMessage(`a new blog ${title} by ${author} added`)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
     } catch (exception) {
-      console.log(exception)
+      setErrorMessage(exception)
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
     }
   }
 
+  const errorStyle = {
+    color: "red",
+    backgroundColor: "#C3C3C3",
+    border: "2px solid red",
+    padding: "10px",
+  }
+
+  const successStyle = {
+    color: "green",
+    backgroundColor: "#C3C3C3",
+    border: "2px solid green",
+    padding: "10px",
+  }
+
   if (user === null)
     return (
       <div>
         <h2>log in to application</h2>
-        {errorMessage !== null}
-        <div>{errorMessage}</div>
+        {errorMessage !== null && <div style={errorStyle}>{errorMessage}</div>}
+        {successMessage !== null && <div style={successStyle}>{successMessage}</div>}
 
         <form onSubmit={handleLogin}>
           <div>
@@ -103,8 +122,8 @@ const App = () => {
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
 
       <h2>create new</h2>
-      {errorMessage !== null}
-      <div>{errorMessage}</div>
+      {errorMessage !== null && <div style={errorStyle}>{errorMessage}</div>}
+      {successMessage !== null && <div style={successStyle}>{successMessage}</div>}
 
       <form onSubmit={handleCreateBlog}>
         <div>
