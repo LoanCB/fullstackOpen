@@ -2,18 +2,18 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+  const [user, setUser] = useState(null)
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [successMessage, setSuccessMessage] = useState(null)
 
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -54,43 +54,12 @@ const App = () => {
     setUser(null)
   }
 
-  const handleCreateBlog = async (event) => {
-    event.preventDefault()
-    try {
-      const response = await blogService.create({title, author, url})
-      setBlogs(blogs.concat(response))
-      setSuccessMessage(`a new blog ${title} by ${author} added`)
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
-    } catch (exception) {
-      setErrorMessage(exception)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    }
-  }
-
-  const errorStyle = {
-    color: "red",
-    backgroundColor: "#C3C3C3",
-    border: "2px solid red",
-    padding: "10px",
-  }
-
-  const successStyle = {
-    color: "green",
-    backgroundColor: "#C3C3C3",
-    border: "2px solid green",
-    padding: "10px",
-  }
-
   if (user === null)
     return (
       <div>
         <h2>log in to application</h2>
-        {errorMessage !== null && <div style={errorStyle}>{errorMessage}</div>}
-        {successMessage !== null && <div style={successStyle}>{successMessage}</div>}
+        {errorMessage !== null && <div className='error-message'>{errorMessage}</div>}
+        {successMessage !== null && <div className='success-message'>{successMessage}</div>}
 
         <form onSubmit={handleLogin}>
           <div>
@@ -122,39 +91,9 @@ const App = () => {
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
 
       <h2>create new</h2>
-      {errorMessage !== null && <div style={errorStyle}>{errorMessage}</div>}
-      {successMessage !== null && <div style={successStyle}>{successMessage}</div>}
-
-      <form onSubmit={handleCreateBlog}>
-        <div>
-          title
-          <input 
-            type='text'
-            value={title}
-            name='Title'
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author
-          <input 
-            type='text'
-            value={author}
-            name='Author'
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url
-          <input 
-            type='text'
-            value={url}
-            name='Url'
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button type='submit'>create</button>
-      </form>
+      <Togglable buttonLabel='new note'>
+        <BlogForm blogs={blogs} setBlogs={setBlogs}/>
+      </Togglable>
 
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
