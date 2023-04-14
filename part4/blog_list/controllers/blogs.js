@@ -25,8 +25,6 @@ blogsRouter.post('/', userExtractor, async (request, response) => {
 blogsRouter.delete('/:id', userExtractor, async (request, response) => {
   const blog = await Blog.findById(request.params.id)
 
-  console.log(request.user.id)
-
   if (blog.user.toString() === request.user.id)
     await blog.remove()
   else response.status(403).json({error: "You don't have rights to remove this blog"})
