@@ -43,5 +43,23 @@ describe('Blog app', function() {
       cy.get('#create_blog_btn').click()
       cy.contains('blog created by cypress')
     })
+
+    describe('1 blog created', function() {
+      beforeEach(function() {
+        cy.contains('new note').click()
+        cy.get('#blog_title_input').type('blog created by cypress')
+        cy.get('#blog_author_input').type('Cypress author')
+        cy.get('#blog_url_input').type('https://www.lawifi.fr/')
+        cy.get('#create_blog_btn').click()
+        cy.contains('blog created by cypress')
+      })
+
+      it('user can like a blog', function() {
+        cy.get('html').should('contain', 'likes 0')
+        cy.contains('view').click()
+        cy.contains('like').click()
+        cy.get('html').should('contain', 'likes 1')
+      })
+    })
   })
 })
