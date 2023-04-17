@@ -29,4 +29,19 @@ describe('Blog app', function() {
       cy.get('html').should('not.contain', 'admin admin logged in')
     })
   })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({username: 'root', password: 'secret'})
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('new note').click()
+      cy.get('#blog_title_input').type('blog created by cypress')
+      cy.get('#blog_author_input').type('Cypress author')
+      cy.get('#blog_url_input').type('https://www.lawifi.fr/')
+      cy.get('#create_blog_btn').click()
+      cy.contains('blog created by cypress')
+    })
+  })
 })
