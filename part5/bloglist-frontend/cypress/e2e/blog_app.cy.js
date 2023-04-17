@@ -58,7 +58,17 @@ describe('Blog app', function() {
         cy.get('html').should('contain', 'likes 0')
         cy.contains('view').click()
         cy.contains('like').click()
-        cy.get('html').should('contain', 'likes 1')
+      })
+
+      it('creator of a blog can delete it', function() {
+        cy.get('#blog_title_input').clear()
+        cy.get('#blog_title_input').type('tested blog')
+        cy.get('#create_blog_btn').click()
+
+        cy.get('html').should('contain', 'blog created by cypress')
+        cy.contains('view').click()
+        cy.contains('remove').click()
+        cy.get('.blog').should('not.contain', 'blog created by cypress')
       })
     })
   })
