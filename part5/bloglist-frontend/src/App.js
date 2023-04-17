@@ -7,7 +7,7 @@ import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState({})
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -16,18 +16,18 @@ const App = () => {
   const [successMessage] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )  
-  }, [])
-
-  useEffect(() => {
     const loggedUser = window.localStorage.getItem('loggedUser')
     if (loggedUser) {
       const user = JSON.parse(loggedUser)
       setUser(user)
       blogService.setToken(user.token)
     }
+  }, [])
+
+  useEffect(() => {
+    blogService.getAll().then(blogs =>
+      setBlogs(blogs)
+    )  
   }, [])
 
   const handleLogin = async (event) => {
@@ -59,7 +59,7 @@ const App = () => {
     else setBlogs(blogs.map(blog => blog.id === editedBlog.id ? editedBlog : blog))
   }
 
-  if (user === null)
+  if (!('token' in user))
     return (
       <div>
         <h2>log in to application</h2>
@@ -69,7 +69,8 @@ const App = () => {
         <form onSubmit={handleLogin}>
           <div>
             username
-            <input 
+            <input
+              id='username_input'
               type='text'
               value={username}
               name='Username'
@@ -79,13 +80,14 @@ const App = () => {
           <div>
             password
             <input 
+              id='password_input'
               type='password'
               value={password}
               name='Password'
               onChange={({ target }) => setPassword(target.value)}
             />
           </div>
-          <button type='submit'>login</button>
+          <button type='submit' id='login_btn'>login</button>
         </form>
       </div>
     )
