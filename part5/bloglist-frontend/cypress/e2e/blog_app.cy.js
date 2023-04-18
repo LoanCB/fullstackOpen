@@ -78,5 +78,11 @@ describe('Blog app', function() {
       cy.contains('test from command')
       cy.get('.blog').should('not.contain', 'remove')
     })
+
+    it('test ordering blogs', function() {
+      cy.createTwoBlogs()
+      cy.get('.blog').eq(0).should('contain', 'most likes')
+      cy.get('.blog').eq(1).should('contain', 'less likes')
+    })
   })
 })
