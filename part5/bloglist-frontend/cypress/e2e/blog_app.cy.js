@@ -71,5 +71,12 @@ describe('Blog app', function() {
         cy.get('.blog').should('not.contain', 'blog created by cypress')
       })
     })
+
+    it('User cannot delete other blog', function() {
+      cy.createTestBlog()
+      cy.contains('view').click()
+      cy.contains('test from command')
+      cy.get('.blog').should('not.contain', 'remove')
+    })
   })
 })
