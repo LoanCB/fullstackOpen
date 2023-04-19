@@ -11,22 +11,22 @@ const BmiParseArguments = (args: string[]): BmiEntries => {
     return {
       height: Number(args[2]),
       weight: Number(args[3])
-    }
+    };
   } else {
-    throw new Error('Provided values were not numbers !')
+    throw new Error('Provided values were not numbers !');
   }
-}
+};
 
 export const HttpBmiParseArguments = (height: string, weight: string): BmiEntries => {
   if (!isNaN(Number(height)) && !isNaN(Number(weight))) {
     return {
       height: Number(height),
       weight: Number(weight)
-    }
+    };
   } else {
-    throw new Error('malformatted parameters')
+    throw new Error('malformatted parameters');
   }
-}
+};
 
 interface Response {
   weight: number;
@@ -39,7 +39,7 @@ export const calculateBmi = (height: number, weight: number): Response => {
     weight: weight,
     height: height,
     bmi: ''
-  }
+  };
   height = height / 100;
   const result = weight / (height * height);
 
@@ -52,14 +52,14 @@ export const calculateBmi = (height: number, weight: number): Response => {
   else if (result <= 39.9) response.bmi = 'Obese (Class II)';
   else response.bmi = 'Obese (Class III)';
   return response;
-}
+};
 
 try {
   const { height, weight } = BmiParseArguments(process.argv);
   console.log(calculateBmi(height, weight));
 } catch (e: unknown) {
-  let errorMessage = 'Something bad happened.'
+  let errorMessage = 'Something bad happened.';
   if (e instanceof Error)
-    errorMessage += ` Error: ${e.message}`
-  console.log(errorMessage)
+    errorMessage += ` Error: ${e.message}`;
+  console.log(errorMessage);
 }

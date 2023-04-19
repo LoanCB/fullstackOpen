@@ -10,11 +10,11 @@ const ExercisesParseArguments = (args: string[]): ExerciseEntries => {
         return {
             target: Number(args[2]),
             dailyExercisesHours: args.slice(3).map(Number)
-        }
+        };
     } else {
-        throw new Error('Provided values were not numbers !')
+        throw new Error('Provided values were not numbers !');
     }
-}
+};
 
 interface Result {
     periodLength: number;
@@ -50,8 +50,8 @@ try {
     const { target, dailyExercisesHours } = ExercisesParseArguments(process.argv);
     console.log(calculateExercises(target, dailyExercisesHours));
 } catch (e: unknown) {
-    let errorMessage = 'Something bad happened.'
+    let errorMessage = 'Something bad happened.';
     if (e instanceof Error)
-        errorMessage += ` Error: ${e.message}`
-    console.log(errorMessage)
+        errorMessage += ` Error: ${e.message}`;
+    console.log(errorMessage);
 }
