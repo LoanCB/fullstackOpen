@@ -26,7 +26,7 @@ interface Result {
     ratingDescription: string;
 }
 
-const calculateExercises = (target: number, dailyExercisesHours: number[]): Result => {
+export const calculateExercises = (target: number, dailyExercisesHours: number[]): Result => {
     const average = dailyExercisesHours.reduce((sum, cur) => sum + cur) / dailyExercisesHours.length;
     const rating = average < target - target / 4 ? 1 : average < target ? 2 : 3;
     const ratingDescriptionMessages = [
