@@ -1,14 +1,14 @@
-import {CourseParts} from "../types";
+import {CoursePart} from "../types";
 
 interface TotalProps {
-    courseParts: CourseParts[];
+    CoursePart: CoursePart[];
 }
 
 const Total = (props: TotalProps) => {
     return (
         <p>
             Number of exercises{" "}
-            {props.courseParts.reduce((carry, part) => carry + part.exerciseCount, 0)}
+            {props.CoursePart.reduce((carry, part) => carry + part.exerciseCount, 0)}
         </p>
     );
 };
