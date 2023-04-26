@@ -44,26 +44,24 @@ function App() {
           date
           <input type="date" value={date} onChange={({target}) => setDate(target.value)} />
         </div>
-        <div>
-          visibility
-          <select value={visibility} onChange={({target}) => setVisibility(target.value as Visibility)}>
-            {Object.keys(Visibility).map(key => (
-              <option key={key} value={key.toLowerCase()}>
-                {key}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          weather
-          <select value={weather} onChange={({target}) => setWeather(target.value as Weather)}>
-            {Object.keys(Weather).map(key => (
-              <option key={key} value={key}>
-                {key}
-              </option>
-            ))}
-          </select>
-        </div>
+        <fieldset>
+          <legend>Visibility</legend>
+          {Object.keys(Visibility).map(key => (
+            <label key={key}>
+              {key}
+              <input type="radio" value={key} id={key} name="visibility" onChange={({target}) => setVisibility(target.value as Visibility)}/>
+            </label>
+          ))}
+        </fieldset>
+        <fieldset>
+          <legend>Weather</legend>
+          {Object.keys(Weather).map(key => (
+            <label key={key}>
+              {key}
+              <input type="radio" value={key} name="weather" onChange={({target}) => setWeather(target.value as Weather)}/>
+            </label>
+          ))}
+        </fieldset>
         <div>
           comment
           <input type="text" value={comment} onChange={({target}) => setComment(target.value)} />
