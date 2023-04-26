@@ -1,6 +1,7 @@
-import {useEffect, useState} from 'react';
+import {SyntheticEvent, useEffect, useState} from 'react';
 import {Diary, Visibility, Weather} from './types';
 import {createDiary, getAllDiaries} from './services/diaries';
+import axios from 'axios';
 
 function App() {
   const [diaries, setDiaries] = useState<Diary[]>([]);
@@ -8,12 +9,13 @@ function App() {
   const [visibility, setVisibility] = useState<Visibility>(Visibility.Great);
   const [weather, setWeather] = useState<Weather>(Weather.Sunny);
   const [comment, setComment] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     getAllDiaries().then(data => setDiaries(data));
   }, []);
 
-  const diaryCreation = (event: React.SyntheticEvent) => {
+  const diaryCreation = async (event: SyntheticEvent) => {
     event.preventDefault();
     const diaryToAdd = {
       visibility: visibility,
@@ -21,12 +23,22 @@ function App() {
       date: date,
       comment: comment
     };
-    createDiary(diaryToAdd).then(data => setDiaries(diaries.concat(data)));
+    try {
+      const data = await createDiary(diaryToAdd);
+      setDiaries(diaries.concat(data));
+      setError('');
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data)
+        setError(error.response.data);
+      else
+        setError(error as string);
+    }
   };
 
   return (
     <div>
       <h2>Add new entry</h2>
+      {error && <div style={{color: 'red'}}>{error}</div>}
       <form onSubmit={diaryCreation}>
         <div>
           date
@@ -36,7 +48,7 @@ function App() {
           visibility
           <select value={visibility} onChange={({target}) => setVisibility(target.value as Visibility)}>
             {Object.keys(Visibility).map(key => (
-              <option key={key} value={key}>
+              <option key={key} value={key.toLowerCase()}>
                 {key}
               </option>
             ))}

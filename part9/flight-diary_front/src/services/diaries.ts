@@ -9,8 +9,7 @@ export const getAllDiaries = () => {
         .then(response => response.data);
 };
 
-export const createDiary = (object: NewDiary) => {
-    return axios
-      .post<Diary>(baseUrl, object)
-      .then(response => response.data);
+export const createDiary = async (object: NewDiary): Promise<Diary> => {
+    const response = await axios.post<Diary>(baseUrl, object);
+    return response.data;
 };
